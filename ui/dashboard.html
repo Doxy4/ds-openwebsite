@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FiveM Website Opener</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="app.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        iframe {
+            width: 80vw;
+            height: 80vh;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="websiteFrame" src=""></iframe>
+
+    <script>
+
+        window.addEventListener('message', function(event) {
+            if (event.data.openWebsite) {
+
+                if (event.data.popup) {
+                    $.post('https://ds-openwebsite/escape');
+                    window.invokeNative('openUrl', event.data.websiteUrl)
+                } else {
+
+                    var websiteUrl = event.data.websiteUrl;
+                var iframe = document.getElementById('websiteFrame');
+                
+                iframe.src = websiteUrl;
+                iframe.style.display = 'block';
+                iframe.contentWindow.focus();
+                iframe.onload = function () {
+
+                iframe.contentWindow.addEventListener('keyup', function (e) {
+                    if (e.key === "Escape") {
+                        $.post('https://ds-openwebsite/escape');
+                    }
+                });
+            };
+
+            }
+
+            } else {
+                document.getElementById('websiteFrame').style.display = 'none';
+            }
+        });
+
+    </script>
+</body>
+</html>
